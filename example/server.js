@@ -34,17 +34,6 @@ app.get("/users", async (req, res) => {
   res.json(users);
 });
 
-// READ ONE (GET /users/:id)
-app.get("/users/:id", async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ error: "User not found" });
-    res.json(user);
-  } catch {
-    res.status(400).json({ error: "Invalid ID format" });
-  }
-});
-
 // UPDATE (PUT /users/:id)
 app.put("/users/:id", async (req, res) => {
   try {
@@ -101,6 +90,7 @@ app.get("/users/min-age", async (req, res) => {
     const users = await User.find({
       age: { $gte: Number(value) }
     });
+    console.log(users)
     res.json(users);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -108,17 +98,14 @@ app.get("/users/min-age", async (req, res) => {
 });
 
 // GET /users/max-age?value=30
-app.get("/users/max-age", async (req, res) => {
+app.get("/users/max", async (req, res) => {
   const { value } = req.query;
-
-  if (!value) {
-    return res.status(400).json({ error: "value query param is required" });
-  }
-
   try {
     const users = await User.find({
       age: { $lte: Number(value) }
     });
+
+    console.log(users)
     res.json(users);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -187,6 +174,17 @@ app.get("/users/search", async (req, res) => {
 
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// READ ONE (GET /users/:id)
+app.get("/users/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json(user);
+  } catch {
+    res.status(400).json({ error: "Invalid ID format" });
   }
 });
 
